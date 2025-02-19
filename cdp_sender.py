@@ -12,7 +12,7 @@ def send_cdp_packet(interface):
     cdp = CDPv2_HDR(
         ttl=180,  # 180 seconds TTL
         msg=[
-            CDPMsgDeviceID(device_id='Python_AP_01'),
+            CDPMsgDeviceID(val='Python_AP_01'),
             CDPMsgSoftwareVersion(val='AP Software 8.5.1'),
             CDPMsgPlatform(val='Cisco Aironet 2800'),
             CDPMsgPortID(iface=interface)
