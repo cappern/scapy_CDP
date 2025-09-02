@@ -3,7 +3,7 @@ Description=CDP Sender Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/cdp_sender.py
+ExecStart=/usr/local/bin/cdp-sender
 Restart=always
 User=root
 

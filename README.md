@@ -1,49 +1,32 @@
-# CDP Sender Script Instructions
+# CDP Sender Module
 
 ## Overview
-This guide explains how to set up and use a CDP (Cisco Discovery Protocol) sender script on Kali Linux. The script uses **Scapy** to send CDP packets every 60 seconds.
+`scapy-cdp` provides a small command line utility to send Cisco Discovery Protocol (CDP) packets using [Scapy](https://scapy.net/). It installs a `cdp-sender` command that transmits a CDP packet every 60 seconds. The module works well on Linux systems, including Raspberry Pi.
 
-## Prerequisites
-Ensure you have the following installed:
+## Installation
+Install the package with `pip`:
 
-- Python 3
-- Scapy
-- Systemd (for automatic startup)
-
-### Install Scapy (if not installed)
 ```bash
-sudo apt update
-sudo apt install python3-scapy -y
+sudo pip3 install scapy-cdp
 ```
 
-## Script Location
-The script should be stored at:
+This creates the `/usr/local/bin/cdp-sender` executable.
+
+## Usage
+Display available options:
+
 ```bash
-/usr/local/bin/cdp_sender.py
+sudo cdp-sender --help
 ```
 
-### Grant Execution Permission
-```bash
-sudo chmod +x /usr/local/bin/cdp_sender.py
-```
-
-## Running the Script Manually
-To manually start the script, run:
-```bash
-sudo /usr/local/bin/cdp_sender.py
-```
-
-## Configuration
-The script accepts command-line arguments to customize the CDP fields. View available options:
-```bash
-sudo /usr/local/bin/cdp_sender.py --help
-```
 Example:
+
 ```bash
-sudo /usr/local/bin/cdp_sender.py --interface eth0 --device-id MyDevice --software-version "1.2.3" --platform "MyPlatform"
+sudo cdp-sender --interface eth0 --device-id MyDevice --software-version "1.2.3" --platform "MyPlatform"
 ```
 
-You can also provide a JSON configuration file:
+Settings can also come from a JSON configuration file:
+
 ```json
 {
   "interface": "eth0",
@@ -54,28 +37,23 @@ You can also provide a JSON configuration file:
   "capabilities": "0x0028"
 }
 ```
-Run the script with:
+
+Run with the configuration file:
+
 ```bash
-sudo /usr/local/bin/cdp_sender.py --config config.json
+sudo cdp-sender --config config.json
 ```
 
-## Setting Up Automatic Execution with systemd
-To ensure the script starts at boot and runs continuously, follow these steps:
+## Systemd Service
+Create `/etc/systemd/system/cdp_sender.service`:
 
-### 1. Create a Systemd Service File
-Create the service file:
-```bash
-sudo nano /etc/systemd/system/cdp_sender.service
-```
-
-### 2. Add the Following Content
 ```ini
 [Unit]
 Description=CDP Sender Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/cdp_sender.py
+ExecStart=/usr/local/bin/cdp-sender
 Restart=always
 User=root
 
@@ -83,51 +61,26 @@ User=root
 WantedBy=multi-user.target
 ```
 
-Save and exit (`CTRL+X`, `Y`, `Enter`).
+Then enable and start the service:
 
-### 3. Enable and Start the Service
-Reload systemd and enable the service:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable cdp_sender
 sudo systemctl start cdp_sender
 ```
 
-### 4. Check Service Status
-To verify that the service is running:
-```bash
-sudo systemctl status cdp_sender
-```
+## Cron Alternative
+To run the script every minute with cron:
 
-## Logs and Debugging
-To check real-time logs:
-```bash
-journalctl -u cdp_sender -f
-```
-
-To restart the service:
-```bash
-sudo systemctl restart cdp_sender
-```
-
-To stop the service:
-```bash
-sudo systemctl stop cdp_sender
-```
-
-## Alternative: Using Cron
-If you prefer to use cron instead of systemd, add the following entry:
 ```bash
 sudo crontab -e
 ```
-Add this line at the end:
+
+Add this line:
+
 ```bash
-* * * * * /usr/local/bin/cdp_sender.py
+* * * * * /usr/local/bin/cdp-sender
 ```
-This will run the script every minute.
 
-## Conclusion
-By following these steps, Kali Linux will automatically send CDP packets every 60 seconds. You can choose between **systemd** for continuous execution or **cron** for periodic execution.
-
-Enjoy your CDP sender automation! 🚀
-
+## License
+MIT
