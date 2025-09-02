@@ -68,8 +68,8 @@ def parse_args():
     parser.add_argument(
         "--capabilities",
         type=lambda x: int(x, 0),
-        default=0x0028,
-        help="Capabilities bitmap (e.g., 0x0028).",
+        default=0x0038,
+        help="Capabilities bitmap (e.g., 0x0038).",
     )
     parser.add_argument("--config", help="Path to JSON file with default argument values.")
     args = parser.parse_args()
