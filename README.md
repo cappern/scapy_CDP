@@ -12,6 +12,17 @@ sudo pip3 install scapy-cdp
 
 This creates the `/usr/local/bin/cdp-sender` executable.
 
+After installation, ensure the directory containing the executable is on your
+`PATH` so that the `cdp-sender` command is recognized without specifying the
+full path. For example, if pip installs to `/usr/local/bin`:
+
+```bash
+export PATH="$PATH:/usr/local/bin"
+```
+
+Users of tools like **pyenv** may also need to run `pyenv rehash` after
+installing to refresh shims for new commands.
+
 ## Usage
 Display available options:
 
