@@ -2,7 +2,14 @@ name: CI
 
 on:
   push:
+    tags:
+      - "v*"      # kjør release når du pusher en tag (eks: v1.2.3)
+    branches:
+      - "**"      # behold push-build på alle branches
   pull_request:
+
+permissions:
+  contents: read   # default for hele workflowen; justeres på release-jobben
 
 jobs:
   test:
@@ -19,6 +26,7 @@ jobs:
       - name: Run tests
         run: |
           pytest || if [ $? -eq 5 ]; then echo "No tests collected"; else exit $?; fi
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -39,16 +47,29 @@ jobs:
         with:
           name: dist
           path: dist/*
+
   release:
     needs: build
     runs-on: ubuntu-latest
+    # KUN når vi pusher tag (fra on.push.tags over)
+    permissions:
+      contents: write   # <- må til for å lage release med GITHUB_TOKEN
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
+
+      # (valgfritt) sjekk hva som faktisk ble lastet ned
+      - name: List artifacts
+        run: ls -al dist
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
