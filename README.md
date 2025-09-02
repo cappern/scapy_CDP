@@ -1,5 +1,5 @@
 # CDP Sender Module
-
+[![CI](https://github.com/cappern/scapy_CDP/actions/workflows/ci.yml/badge.svg)](https://github.com/cappern/scapy_CDP/actions/workflows/ci.yml)
 ## Overview
 `scapy-cdp` provides a small command line utility to send Cisco Discovery Protocol (CDP) packets using [Scapy](https://scapy.net/). It installs a `cdp-sender` command that transmits a CDP packet every 60 seconds. The module works well on Linux systems, including Raspberry Pi.
 
