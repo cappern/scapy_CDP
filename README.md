@@ -33,6 +33,32 @@ To manually start the script, run:
 sudo /usr/local/bin/cdp_sender.py
 ```
 
+## Configuration
+The script accepts command-line arguments to customize the CDP fields. View available options:
+```bash
+sudo /usr/local/bin/cdp_sender.py --help
+```
+Example:
+```bash
+sudo /usr/local/bin/cdp_sender.py --interface eth0 --device-id MyDevice --software-version "1.2.3" --platform "MyPlatform"
+```
+
+You can also provide a JSON configuration file:
+```json
+{
+  "interface": "eth0",
+  "device_id": "MyDevice",
+  "software_version": "1.2.3",
+  "platform": "MyPlatform",
+  "ttl": 120,
+  "capabilities": "0x0028"
+}
+```
+Run the script with:
+```bash
+sudo /usr/local/bin/cdp_sender.py --config config.json
+```
+
 ## Setting Up Automatic Execution with systemd
 To ensure the script starts at boot and runs continuously, follow these steps:
 
