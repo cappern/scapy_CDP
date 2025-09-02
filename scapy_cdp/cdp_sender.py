@@ -36,10 +36,10 @@ def send_cdp_packet(interface, device_id, software_version, platform, ttl, capab
         msg=[
             CDPMsgDeviceID(val=device_id),
             CDPMsgAddr(naddr=1, addr=[addr_record]),
+            CDPMsgPortID(iface=interface),
             CDPMsgCapabilities(cap=capabilities),
             CDPMsgSoftwareVersion(val=software_version),
             CDPMsgPlatform(val=platform),
-            CDPMsgPortID(iface=interface),
         ],
     )
 
