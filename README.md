@@ -34,7 +34,7 @@ Settings can also come from a JSON configuration file:
   "software_version": "1.2.3",
   "platform": "MyPlatform",
   "ttl": 120,
-  "capabilities": "0x0028"
+  "capabilities": "0x0038"
 }
 ```
 
