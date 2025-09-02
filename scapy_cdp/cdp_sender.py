@@ -24,9 +24,9 @@ def send_cdp_packet(interface, device_id, software_version, platform, ttl, capab
     print(f"Using source IP address: {src_ip}")
 
     # Create base packet with CDP multicast address and correct source MAC
-    eth = Ether(dst='01:00:0c:cc:cc:cc', src=src_mac)
-    llc = LLC(dsap=0xaa, ssap=0xaa, ctrl=3)
-    snap = SNAP(OUI=0x00000c, code=0x2000)
+    eth = Ether(dst="01:00:0c:cc:cc:cc", src=src_mac)
+    llc = LLC(dsap=0xAA, ssap=0xAA, ctrl=3)
+    snap = SNAP(OUI=0x00000C, code=0x2000)
 
     # Create the address record
     addr_record = CDPAddrRecordIPv4(addr=src_ip)
@@ -35,29 +35,26 @@ def send_cdp_packet(interface, device_id, software_version, platform, ttl, capab
         ttl=ttl,
         msg=[
             CDPMsgDeviceID(val=device_id),
-            CDPMsgAddr(
-                naddr=1,
-                addr=[addr_record]
-            ),
-            CDPMsgCapabilities(
-                cap=capabilities
-            ),
+            CDPMsgAddr(naddr=1, addr=[addr_record]),
+            CDPMsgCapabilities(cap=capabilities),
             CDPMsgSoftwareVersion(val=software_version),
             CDPMsgPlatform(val=platform),
-            CDPMsgPortID(iface=interface)
-        ]
+            CDPMsgPortID(iface=interface),
+        ],
     )
 
-    packet = eth/llc/snap/cdp
+    packet = eth / llc / snap / cdp
 
     try:
         while True:
             sendp(packet, iface=interface, verbose=False)
-            print(f"CDP packet sent on interface {interface} at {time.strftime('%H:%M:%S')}")
+            print(
+                f"CDP packet sent on interface {interface} at {time.strftime('%H:%M:%S')}"
+            )
             time.sleep(60)  # Wait 60 seconds before next packet
     except KeyboardInterrupt:
         print("\nStopping CDP sender...")
-    except Exception as e:
+    except Exception as e:  # pragma: no cover - runtime safeguard
         print(f"Error sending packet: {e}")
 
 
@@ -88,8 +85,10 @@ def parse_args():
     return args
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Entry point for the ``cdp-sender`` console script."""
     args = parse_args()
+
     # List available interfaces
     print("Available interfaces:")
     print(get_if_list())
@@ -104,3 +103,7 @@ if __name__ == "__main__":
         ttl=args.ttl,
         capabilities=args.capabilities,
     )
+
+
+if __name__ == "__main__":  # pragma: no cover - manual execution
+    main()
