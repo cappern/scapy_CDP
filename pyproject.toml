@@ -13,5 +13,10 @@ dependencies = [
     "scapy"
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest"
+]
+
 [tool.setuptools]
 py-modules = ["cdp_sender"]
